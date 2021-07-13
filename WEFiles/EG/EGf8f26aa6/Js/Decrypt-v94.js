@@ -32,44 +32,51 @@ var OnButtonPress = function(selfID){
 
 		var div = document.getElementById(id);
 		var inputDiv = document.getElementById(keyId);
-		console.log(div)
-		console.log(inputDiv)
 		var key = inputDiv.getElementsByTagName("input")[0].value;
 		var spans = div.getElementsByTagName("span");
-		var plainText = "";
+		div.children
+		console.log(spans)
 		var keyIndex = 0;
+		var plainText = "";
 		var cipherText = "";
-		for(i=0;i<spans.length;i++)
+		for(spanI=0;spanI<spans.length;spanI++)
 		{
-			if (i == 2)
+			if (spanI >= 2)
 			{
-				cipherText = spans[i].innerHTML;
-			}
-		}
+				plainText = ""
+				cipherText = spans[spanI].innerHTML;
+				console.log(cipherText)
+				for (i=0;i<cipherText.length;i++){
+					if (isAlpha(cipherText.charAt(i))){
+						var letNumber = LetterToNumber(cipherText.charAt(i));
+						letNumber = (letNumber - LetterToNumber(key.charAt(keyIndex%key.length)) + 26)%26;
+						keyIndex += 1;
+						if (cipherText.charAt(i) == cipherText.charAt(i).toUpperCase()){
+							plainText += Letters[letNumber];
+						}else{
+							plainText += Letters[letNumber].toLowerCase();
+						}
+					}else
+					{
+						if (cipherText.charAt(i) == "<")
+							{
+								if (cipherText.substr(i,4) == "<br>")
+								{
+									plainText+= "<br>"
+									i += 3
+								}
+								if (cipherText.substr(i,6) == "<br \>")
+								{
+									plainText+= "<br \>"
+									i += 3
+								}	
+							}else{
+								plainText += cipherText.charAt(i);
+							}
+					}
 
-		for (i=0;i<cipherText.length;i++){
-			if (isAlpha(cipherText.charAt(i))){
-				var letNumber = LetterToNumber(cipherText.charAt(i));
-				letNumber = (letNumber - LetterToNumber(key.charAt(keyIndex%key.length)) + 26)%26;
-				keyIndex += 1;
-				if (cipherText.charAt(i) == cipherText.charAt(i).toUpperCase()){
-					plainText += Letters[letNumber];
-				}else{
-					plainText += Letters[letNumber].toLowerCase();
 				}
-
-			}else
-			{
-				plainText += cipherText.charAt(i);
-			}
-
-		}
-
-		for(i=0;i<spans.length;i++)
-		{
-			if (i == 2)
-			{
-				spans[i].innerHTML = plainText;
+				spans[spanI].innerHTML = plainText;
 			}
 		}
 		return "WOW";

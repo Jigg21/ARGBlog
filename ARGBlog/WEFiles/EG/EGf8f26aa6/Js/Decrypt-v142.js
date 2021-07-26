@@ -35,7 +35,6 @@ var OnButtonPress = function(selfID){
 		var key = inputDiv.getElementsByTagName("input")[0].value;
 		var spans = div.getElementsByTagName("span");
 		div.children
-		console.log(spans)
 		var keyIndex = 0;
 		var plainText = "";
 		var cipherText = "";
@@ -45,7 +44,6 @@ var OnButtonPress = function(selfID){
 			{
 				plainText = ""
 				cipherText = spans[spanI].innerHTML;
-				console.log(cipherText)
 				for (i=0;i<cipherText.length;i++){
 					if (isAlpha(cipherText.charAt(i))){
 						var letNumber = LetterToNumber(cipherText.charAt(i));
@@ -68,8 +66,43 @@ var OnButtonPress = function(selfID){
 								if (cipherText.substr(i,6) == "<br \>")
 								{
 									plainText+= "<br \>"
+									i += 5
+								}
+								
+								if (cipherText.substr(i,4) == "</a>")
+								{
+									
+									plainText+= "</a>"
 									i += 3
-								}	
+									console.log(cipherText.charAt(i))
+								}
+								
+								
+								if (cipherText.substr(i,9) == '<a href="')
+								{
+									var linkKeyIndex = 0
+									var linkLetNum = 0
+									plainText+= '<a href="'
+									i += 9
+									var currentLetter = cipherText.charAt(i)
+									while(currentLetter != '.')
+										{
+											if (isAlpha(currentLetter))
+											{
+												linkLetNum = LetterToNumber(cipherText.charAt(i))
+												plainText += Letters[(linkLetNum - LetterToNumber(key.charAt(linkKeyIndex%key.length)) + 26)%26]
+											}else
+											{
+												plainText += currentLetter		
+											}
+											i += 1
+											linkKeyIndex += 1
+											currentLetter = cipherText.charAt(i)
+
+										}
+									plainText += '.htm">'
+									i += 5
+								}
 							}else{
 								plainText += cipherText.charAt(i);
 							}
